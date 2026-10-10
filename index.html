@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101827">
+<title>Mandi Desktop OS</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: white;
+  background: #101827;
+  overflow: hidden;
+}
+
+.desktop {
+  height: 100dvh;
+  padding: 16px;
+  padding-bottom: 76px;
+  background:
+    radial-gradient(circle at 70% 25%, #245b89 0, transparent 40%),
+    linear-gradient(135deg, #101827, #17476b);
+  overflow: auto;
+}
+
+.brand {
+  font-size: 23px;
+  font-weight: bold;
+  margin: 4px 0 24px;
+}
+
+.icons {
+  display: grid;
+  grid-template-columns: repeat(3, 82px);
+  gap: 22px 12px;
+}
+
+.icon {
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: white;
+  padding: 10px 3px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.icon:active {
+  background: #ffffff25;
+}
+
+.emoji {
+  display: block;
+  font-size: 34px;
+  margin-bottom: 8px;
+}
+
+.taskbar {
+  position: fixed;
+  z-index: 1000;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  min-height: 62px;
+  background: #111827ed;
+  backdrop-filter: blur(15px);
+  border-top: 1px solid #ffffff25;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 8px;
+}
+
+.taskbar button {
+  color: white;
+  background: #ffffff12;
+  border: 1px solid #ffffff20;
+  border-radius: 10px;
+  padding: 10px 13px;
+  font-size: 14px;
+}
+
+.window {
+  position: fixed;
+  z-index: 10;
+  top: 15%;
+  left: 5%;
+  width: 90%;
+  height: 65%;
+  max-width: 520px;
+  background: #f3f6fa;
+  color: #182235;
+  border: 1px solid #ffffff80;
+  border-radius: 12px;
+  box-shadow: 0 15px 45px #0008;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.titlebar {
+  min-height: 46px;
+  padding: 8px 10px;
+  background: #dce8f5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-weight: bold;
+  touch-action: none;
+}
+
+.window-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.window-buttons button {
+  border: 0;
+  border-radius: 6px;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+
+.close {
+  background: #e54b4b;
+  color: white;
+}
+
+.minimize {
+  background: #bdcbe0;
+}
+
+.content {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 16px;
+}
+
+.content textarea {
+  width: 100%;
+  height: 100%;
+  min-height: 160px;
+  resize: none;
+  border: 1px solid #ccd5e1;
+  border-radius: 8px;
+  padding: 10px;
+  font: inherit;
+}
+
+.content button,
+.content input {
+  padding: 10px;
+  margin: 4px 0;
+}
+
+.content input {
+  width: 100%;
+}
+
+.content iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: white;
+}
+
+.start-menu {
+  position: fixed;
+  z-index: 999;
+  bottom: 72px;
+  left: 10px;
+  width: min(320px, calc(100vw - 20px));
+  background: #111d30f5;
+  border: 1px solid #ffffff30;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 12px 40px #0008;
+}
+
+.start-menu h3 {
+  margin-top: 0;
+}
+
+.start-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.start-grid button {
+  color: white;
+  border: 1px solid #ffffff20;
+  border-radius: 10px;
+  background: #ffffff12;
+  padding: 14px 8px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.clock {
+  font-size: 12px;
+  text-align: center;
+}
+
+.hint {
+  position: fixed;
+  bottom: 72px;
+  right: 12px;
+  font-size: 11px;
+  color: #ffffffb0;
+}
+
+@media (min-width: 650px) {
+  .icons {
+    grid-template-columns: repeat(5, 90px);
+  }
+
+  .window {
+    left: 15%;
+    width: 70%;
+    height: 65%;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="desktop" id="desktop">
+  <div class="brand">🖥️ Mandi Desktop OS</div>
+
+  <div class="icons">
+    <button class="icon" onclick="openApp('notepad')">
+      <span class="emoji">📝</span>Notepad
+    </button>
+
+    <button class="icon" onclick="openApp('calculator')">
+      <span class="emoji">🧮</span>Calculator
+    </button>
+
+    <button class="icon" onclick="openApp('browser')">
+      <span class="emoji">🌐</span>Browser
+    </button>
+
+    <button class="icon" onclick="openApp('youtube')">
+      <span class="emoji">▶️</span>YouTube
+    </button>
+
+    <button class="icon" onclick="openApp('facebook')">
+      <span class="emoji">📘</span>Facebook
+    </button>
+
+    <button class="icon" onclick="openApp('instagram')">
+      <span class="emoji">📸</span>Instagram
+    </button>
+
+    <button class="icon" onclick="openApp('files')">
+      <span class="emoji">📁</span>My Files
+    </button>
+  </div>
+</div>
+
+<div class="hint">Mandi Desktop OS · Prototype</div>
+
+<div class="taskbar">
+  <button onclick="toggleStart()">⊞ Start</button>
+  <button onclick="openApp('notepad')">📝</button>
+  <button onclick="openApp('calculator')">🧮</button>
+  <button onclick="openApp('browser')">🌐</button>
+  <div class="clock" id="clock"></div>
+</div>
+
+<div id="startMenu" class="start-menu hidden">
+  <h3>🖥️ Mandi Start</h3>
+  <div class="start-grid">
+    <button onclick="openApp('notepad')">📝 Notepad</button>
+    <button onclick="openApp('calculator')">🧮 Calculator</button>
+    <button onclick="openApp('browser')">🌐 Browser</button>
+    <button onclick="openApp('youtube')">▶️ YouTube</button>
+    <button onclick="openApp('facebook')">📘 Facebook</button>
+    <button onclick="openApp('instagram')">📸 Instagram</button>
+    <button onclick="openApp('files')">📁 My Files</button>
+  </div>
+</div>
+
+<script>
+let nextId = 1;
+let topZ = 20;
+
+const appInfo = {
+  notepad: {
+    title: "Notepad",
+    icon: "📝"
+  },
+  calculator: {
+    title: "Calculator",
+    icon: "🧮"
+  },
+  browser: {
+    title: "Browser",
+    icon: "🌐"
+  },
+  youtube: {
+    title: "YouTube",
+    icon: "▶️"
+  },
+  facebook: {
+    title: "Facebook",
+    icon: "📘"
+  },
+  instagram: {
+    title: "Instagram",
+    icon: "📸"
+  },
+  files: {
+    title: "My Files",
+    icon: "📁"
+  }
+};
+
+function toggleStart() {
+  document.getElementById("startMenu")
+    .classList.toggle("hidden");
+}
+
+function openApp(app) {
+  document.getElementById("startMenu")
+    .classList.add("hidden");
+
+  const id = "window-" + nextId++;
+  const win = document.createElement("section");
+
+  win.className = "window";
+  win.id = id;
+  win.style.left = (3 + (nextId * 4) % 20) + "%";
+  win.style.top = (10 + (nextId * 3) % 15) + "%";
+  win.style.zIndex = ++topZ;
+
+  const info = appInfo[app];
+
+  win.innerHTML = `
+    <div class="titlebar">
+      <span>${info.icon} ${info.title}</span>
+      <div class="window-buttons">
+        <button class="minimize"
+          onclick="minimizeWindow('${id}')">—</button>
+        <button class="close"
+          onclick="closeWindow('${id}')">✕</button>
+      </div>
+    </div>
+    <div class="content" id="${id}-content"></div>
+  `;
+
+  document.body.appendChild(win);
+
+  win.addEventListener("pointerdown", () => {
+    win.style.zIndex = ++topZ;
+  });
+
+  makeDraggable(win);
+  renderApp(app, document.getElementById(id + "-content"));
+}
+
+function closeWindow(id) {
+  document.getElementById(id)?.remove();
+}
+
+function minimizeWindow(id) {
+  const win = document.getElementById(id);
+  if (win) win.style.display = "none";
+}
+
+function makeDraggable(win) {
+  const bar = win.querySelector(".titlebar");
+  let startX, startY, startLeft, startTop;
+
+  bar.addEventListener("pointerdown", e => {
+    if (e.target.closest("button")) return;
+
+    win.style.zIndex = ++topZ;
+
+    const rect = win.getBoundingClientRect();
+    startX = e.clientX;
+    startY = e.clientY;
+    startLeft = rect.left;
+    startTop = rect.top;
+
+    bar.setPointerCapture(e.pointerId);
+
+    function move(ev) {
+      win.style.left =
+        Math.max(0, Math.min(
+          window.innerWidth - 100,
+          startLeft + ev.clientX - startX
+        )) + "px";
+
+      win.style.top =
+        Math.max(0, Math.min(
+          window.innerHeight - 100,
+          startTop + ev.clientY - startY
+        )) + "px";
+    }
+
+    function end() {
+      bar.removeEventListener("pointermove", move);
+      bar.removeEventListener("pointerup", end);
+      bar.removeEventListener("pointercancel", end);
+    }
+
+    bar.addEventListener("pointermove", move);
+    bar.addEventListener("pointerup", end);
+    bar.addEventListener("pointercancel", end);
+  });
+}
+
+function renderApp(app, root) {
+  if (app === "notepad") {
+    root.innerHTML = `
+      <h3>My Notes</h3>
+      <textarea id="notes"
+        placeholder="Write your notes here..."></textarea>
+      <button id="saveNotes">Save Notes</button>
+      <p id="saveStatus"></p>
+    `;
+
+    const notes = root.querySelector("#notes");
+    notes.value = localStorage.getItem("mandi-notes") || "";
+
+    root.querySelector("#saveNotes").onclick = () => {
+      localStorage.setItem("mandi-notes", notes.value);
+      root.querySelector("#saveStatus").textContent = "Notes saved!";
+    };
+  }
+
+  else if (app === "calculator") {
+    root.innerHTML = `
+      <h3>Calculator</h3>
+      <input id="calcDisplay" readonly value="0">
+      <div class="start-grid">
+        ${["7","8","9","÷","4","5","6","×",
+           "1","2","3","-","C","0","=","+"]
+          .map(v => `<button data-key="${v}">${v}</button>`)
+          .join("")}
+      </div>
+    `;
+
+    let expression = "";
+    const display = root.querySelector("#calcDisplay");
+
+    root.querySelectorAll("[data-key]").forEach(btn => {
+      btn.onclick = () => {
+        const key = btn.dataset.key;
+
+        if (key === "C") expression = "";
+        else if (key === "=") {
+          try {
+            if (!/^[0-9+*/().\s-]+$/.test(expression)) {
+              throw Error();
+            }
+            const result = Function(
+              '"use strict"; return (' + expression + ')'
+            )();
+            if (!Number.isFinite(result)) throw Error();
+            expression = String(result);
+          } catch {
+            expression = "";
+            display.value = "Error";
+            return;
+          }
+        } else {
+          expression += ({
+            "÷": "/",
+            "×": "*"
+          })[key] || key;
+        }
+
+        display.value = expression || "0";
+      };
+    });
+  }
+
+  else if (app === "browser") {
+    root.innerHTML = `
+      <h3>Web Browser</h3>
+      <form id="browserForm">
+        <input id="browserUrl"
+          placeholder="Enter a website, e.g. example.com">
+        <button type="submit">Open</button>
+      </form>
+      <p>Some websites block embedded browsing.
+      If a site does not open, use the Open externally button.</p>
+      <button id="external">Open in browser</button>
+    `;
+
+    const input = root.querySelector("#browserUrl");
+
+    function getUrl() {
+      let value = input.value.trim();
+      if (!value) return null;
+
+      if (!/^https?:\/\//i.test(value)) {
+        value = "https://" + value;
+      }
+
+      try {
+        const url = new URL(value);
+        if (!["http:", "https:"].includes(url.protocol)) return null;
+        return url.href;
+      } catch {
+        return null;
+      }
+    }
+
+    root.querySelector("#browserForm").onsubmit = e => {
+      e.preventDefault();
+      const url = getUrl();
+      if (url) window.open(url, "_blank", "noopener");
+    };
+
+    root.querySelector("#external").onclick = () => {
+      const url = getUrl();
+      if (url) window.open(url, "_blank", "noopener");
+    };
+  }
+
+  else if (["youtube", "facebook", "instagram"].includes(app)) {
+    const urls = {
+      youtube: "https://www.youtube.com/",
+      facebook: "https://www.facebook.com/",
+      instagram: "https://www.instagram.com/"
+    };
+
+    root.innerHTML = `
+      <h3>${appInfo[app].title}</h3>
+      <p>This opens the official website in your browser.
+      It does not embed the installed Android app.</p>
+      <button id="openSite">Open ${appInfo[app].title}</button>
+    `;
+
+    root.querySelector("#openSite").onclick = () => {
+      window.open(urls[app], "_blank", "noopener");
+    };
+  }
+
+  else if (app === "files") {
+    root.innerHTML = `
+      <h3>My Files</h3>
+      <p>This is a prototype file window.</p>
+      <p>Real Android file access will be added later
+      using Android's file picker and permissions.</p>
+    `;
+  }
+}
+
+function updateClock() {
+  document.getElementById("clock").textContent =
+    new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+}
+
+updateClock();
+setInterval(updateClock, 1000);
+</script>
+</body>
+  </html>
