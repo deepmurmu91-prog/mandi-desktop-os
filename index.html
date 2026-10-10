@@ -19,10 +19,18 @@ body {
   overflow: hidden;
 }
 
+button, input, textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
 .desktop {
   height: 100dvh;
   padding: 16px;
-  padding-bottom: 76px;
+  padding-bottom: 80px;
   background:
     radial-gradient(circle at 70% 25%, #245b89 0, transparent 40%),
     linear-gradient(135deg, #101827, #17476b);
@@ -38,7 +46,7 @@ body {
 .icons {
   display: grid;
   grid-template-columns: repeat(3, 82px);
-  gap: 22px 12px;
+  gap: 18px 12px;
 }
 
 .icon {
@@ -48,7 +56,6 @@ body {
   color: white;
   padding: 10px 3px;
   font-size: 13px;
-  cursor: pointer;
 }
 
 .icon:active {
@@ -63,7 +70,7 @@ body {
 
 .taskbar {
   position: fixed;
-  z-index: 1000;
+  z-index: 10000;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -74,7 +81,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  padding: 8px;
+  gap: 5px;
+  padding: 7px;
 }
 
 .taskbar button {
@@ -82,18 +90,18 @@ body {
   background: #ffffff12;
   border: 1px solid #ffffff20;
   border-radius: 10px;
-  padding: 10px 13px;
+  padding: 10px;
   font-size: 14px;
 }
 
 .window {
   position: fixed;
-  z-index: 10;
-  top: 15%;
+  z-index: 20;
+  top: 12%;
   left: 5%;
   width: 90%;
-  height: 65%;
-  max-width: 520px;
+  height: 72%;
+  max-width: 760px;
   background: #f3f6fa;
   color: #182235;
   border: 1px solid #ffffff80;
@@ -106,7 +114,7 @@ body {
 
 .titlebar {
   min-height: 46px;
-  padding: 8px 10px;
+  padding: 7px 10px;
   background: #dce8f5;
   display: flex;
   align-items: center;
@@ -114,6 +122,8 @@ body {
   gap: 8px;
   font-weight: bold;
   touch-action: none;
+  user-select: none;
+  flex-shrink: 0;
 }
 
 .window-buttons {
@@ -125,7 +135,6 @@ body {
   border: 0;
   border-radius: 6px;
   padding: 7px 10px;
-  cursor: pointer;
 }
 
 .close {
@@ -141,18 +150,18 @@ body {
   flex: 1;
   min-height: 0;
   overflow: auto;
-  padding: 16px;
+  padding: 12px;
+  position: relative;
 }
 
 .content textarea {
   width: 100%;
-  height: 100%;
-  min-height: 160px;
+  height: 65%;
+  min-height: 120px;
   resize: none;
   border: 1px solid #ccd5e1;
   border-radius: 8px;
   padding: 10px;
-  font: inherit;
 }
 
 .content button,
@@ -166,18 +175,40 @@ body {
 }
 
 .content iframe {
+  display: block;
   width: 100%;
   height: 100%;
+  min-height: 220px;
   border: 0;
   background: white;
 }
 
+.app-button {
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 4px 0;
+  background: #1769aa;
+  color: white;
+}
+
+.secondary-button {
+  border: 1px solid #bdcbe0;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 4px 0;
+  background: white;
+  color: #182235;
+}
+
 .start-menu {
   position: fixed;
-  z-index: 999;
+  z-index: 9999;
   bottom: 72px;
   left: 10px;
   width: min(320px, calc(100vw - 20px));
+  max-height: 70vh;
+  overflow: auto;
   background: #111d30f5;
   border: 1px solid #ffffff30;
   border-radius: 16px;
@@ -203,6 +234,15 @@ body {
   padding: 14px 8px;
 }
 
+.window-status {
+  background: #e7edf5;
+  color: #26364b;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 .hidden {
   display: none !important;
 }
@@ -210,6 +250,7 @@ body {
 .clock {
   font-size: 12px;
   text-align: center;
+  min-width: 42px;
 }
 
 .hint {
@@ -218,6 +259,14 @@ body {
   right: 12px;
   font-size: 11px;
   color: #ffffffb0;
+  pointer-events: none;
+}
+
+.taskbar-app {
+  max-width: 95px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 @media (min-width: 650px) {
@@ -228,17 +277,19 @@ body {
   .window {
     left: 15%;
     width: 70%;
-    height: 65%;
+    height: 72%;
   }
 }
 </style>
 </head>
 
 <body>
+
 <div class="desktop" id="desktop">
   <div class="brand">🖥️ Mandi Desktop OS</div>
 
   <div class="icons">
+
     <button class="icon" onclick="openApp('notepad')">
       <span class="emoji">📝</span>Notepad
     </button>
@@ -266,10 +317,11 @@ body {
     <button class="icon" onclick="openApp('files')">
       <span class="emoji">📁</span>My Files
     </button>
+
   </div>
 </div>
 
-<div class="hint">Mandi Desktop OS · Prototype</div>
+<div class="hint">Mandi Desktop OS · Window Edition</div>
 
 <div class="taskbar">
   <button onclick="toggleStart()">⊞ Start</button>
@@ -281,6 +333,7 @@ body {
 
 <div id="startMenu" class="start-menu hidden">
   <h3>🖥️ Mandi Start</h3>
+
   <div class="start-grid">
     <button onclick="openApp('notepad')">📝 Notepad</button>
     <button onclick="openApp('calculator')">🧮 Calculator</button>
@@ -295,36 +348,16 @@ body {
 <script>
 let nextId = 1;
 let topZ = 20;
+const windows = {};
 
 const appInfo = {
-  notepad: {
-    title: "Notepad",
-    icon: "📝"
-  },
-  calculator: {
-    title: "Calculator",
-    icon: "🧮"
-  },
-  browser: {
-    title: "Browser",
-    icon: "🌐"
-  },
-  youtube: {
-    title: "YouTube",
-    icon: "▶️"
-  },
-  facebook: {
-    title: "Facebook",
-    icon: "📘"
-  },
-  instagram: {
-    title: "Instagram",
-    icon: "📸"
-  },
-  files: {
-    title: "My Files",
-    icon: "📁"
-  }
+  notepad: { title: "Notepad", icon: "📝" },
+  calculator: { title: "Calculator", icon: "🧮" },
+  browser: { title: "Browser", icon: "🌐" },
+  youtube: { title: "YouTube", icon: "▶️" },
+  facebook: { title: "Facebook", icon: "📘" },
+  instagram: { title: "Instagram", icon: "📸" },
+  files: { title: "My Files", icon: "📁" }
 };
 
 function toggleStart() {
@@ -336,42 +369,76 @@ function openApp(app) {
   document.getElementById("startMenu")
     .classList.add("hidden");
 
+  // অ্যাপ আগে থেকেই খোলা থাকলে সেটি সামনে আনো।
+  if (windows[app]) {
+    const existing = document.getElementById(windows[app]);
+
+    if (existing) {
+      existing.style.display = "flex";
+      existing.style.zIndex = ++topZ;
+      return;
+    }
+
+    delete windows[app];
+  }
+
   const id = "window-" + nextId++;
+  const info = appInfo[app];
+
+  if (!info) return;
+
   const win = document.createElement("section");
 
   win.className = "window";
   win.id = id;
-  win.style.left = (3 + (nextId * 4) % 20) + "%";
-  win.style.top = (10 + (nextId * 3) % 15) + "%";
+  win.style.left = "5%";
+  win.style.top = "12%";
   win.style.zIndex = ++topZ;
-
-  const info = appInfo[app];
 
   win.innerHTML = `
     <div class="titlebar">
       <span>${info.icon} ${info.title}</span>
+
       <div class="window-buttons">
         <button class="minimize"
+          aria-label="Minimize"
           onclick="minimizeWindow('${id}')">—</button>
+
         <button class="close"
+          aria-label="Close"
           onclick="closeWindow('${id}')">✕</button>
       </div>
     </div>
+
     <div class="content" id="${id}-content"></div>
   `;
 
   document.body.appendChild(win);
+  windows[app] = id;
 
   win.addEventListener("pointerdown", () => {
     win.style.zIndex = ++topZ;
   });
 
   makeDraggable(win);
-  renderApp(app, document.getElementById(id + "-content"));
+
+  renderApp(
+    app,
+    document.getElementById(id + "-content")
+  );
 }
 
 function closeWindow(id) {
-  document.getElementById(id)?.remove();
+  const win = document.getElementById(id);
+  if (!win) return;
+
+  for (const app in windows) {
+    if (windows[app] === id) {
+      delete windows[app];
+    }
+  }
+
+  win.remove();
 }
 
 function minimizeWindow(id) {
@@ -379,9 +446,27 @@ function minimizeWindow(id) {
   if (win) win.style.display = "none";
 }
 
+function restoreApp(app) {
+  if (windows[app]) {
+    const win = document.getElementById(windows[app]);
+
+    if (win) {
+      win.style.display = "flex";
+      win.style.zIndex = ++topZ;
+      return;
+    }
+  }
+
+  openApp(app);
+}
+
 function makeDraggable(win) {
   const bar = win.querySelector(".titlebar");
-  let startX, startY, startLeft, startTop;
+
+  let startX = 0;
+  let startY = 0;
+  let startLeft = 0;
+  let startTop = 0;
 
   bar.addEventListener("pointerdown", e => {
     if (e.target.closest("button")) return;
@@ -389,6 +474,7 @@ function makeDraggable(win) {
     win.style.zIndex = ++topZ;
 
     const rect = win.getBoundingClientRect();
+
     startX = e.clientX;
     startY = e.clientY;
     startLeft = rect.left;
@@ -397,17 +483,21 @@ function makeDraggable(win) {
     bar.setPointerCapture(e.pointerId);
 
     function move(ev) {
-      win.style.left =
-        Math.max(0, Math.min(
-          window.innerWidth - 100,
-          startLeft + ev.clientX - startX
-        )) + "px";
+      const maxLeft = Math.max(0, window.innerWidth - 100);
+      const maxTop = Math.max(0, window.innerHeight - 100);
 
-      win.style.top =
-        Math.max(0, Math.min(
-          window.innerHeight - 100,
-          startTop + ev.clientY - startY
-        )) + "px";
+      const left = Math.max(
+        0,
+        Math.min(maxLeft, startLeft + ev.clientX - startX)
+      );
+
+      const top = Math.max(
+        0,
+        Math.min(maxTop, startTop + ev.clientY - startY)
+      );
+
+      win.style.left = left + "px";
+      win.style.top = top + "px";
     }
 
     function end() {
@@ -423,32 +513,50 @@ function makeDraggable(win) {
 }
 
 function renderApp(app, root) {
+
   if (app === "notepad") {
     root.innerHTML = `
-      <h3>My Notes</h3>
+      <h3>📝 My Notes</h3>
+
       <textarea id="notes"
         placeholder="Write your notes here..."></textarea>
-      <button id="saveNotes">Save Notes</button>
+
+      <button class="app-button" id="saveNotes">
+        Save Notes
+      </button>
+
       <p id="saveStatus"></p>
     `;
 
     const notes = root.querySelector("#notes");
-    notes.value = localStorage.getItem("mandi-notes") || "";
+
+    try {
+      notes.value = localStorage.getItem("mandi-notes") || "";
+    } catch (e) {}
 
     root.querySelector("#saveNotes").onclick = () => {
-      localStorage.setItem("mandi-notes", notes.value);
-      root.querySelector("#saveStatus").textContent = "Notes saved!";
+      try {
+        localStorage.setItem("mandi-notes", notes.value);
+        root.querySelector("#saveStatus").textContent =
+          "Notes saved successfully!";
+      } catch (e) {
+        root.querySelector("#saveStatus").textContent =
+          "Could not save notes in this browser.";
+      }
     };
   }
 
   else if (app === "calculator") {
     root.innerHTML = `
-      <h3>Calculator</h3>
+      <h3>🧮 Calculator</h3>
+
       <input id="calcDisplay" readonly value="0">
+
       <div class="start-grid">
         ${["7","8","9","÷","4","5","6","×",
            "1","2","3","-","C","0","=","+"]
-          .map(v => `<button data-key="${v}">${v}</button>`)
+          .map(v => `<button class="secondary-button"
+            data-key="${v}">${v}</button>`)
           .join("")}
       </div>
     `;
@@ -460,23 +568,31 @@ function renderApp(app, root) {
       btn.onclick = () => {
         const key = btn.dataset.key;
 
-        if (key === "C") expression = "";
+        if (key === "C") {
+          expression = "";
+        }
+
         else if (key === "=") {
           try {
             if (!/^[0-9+*/().\s-]+$/.test(expression)) {
               throw Error();
             }
+
             const result = Function(
               '"use strict"; return (' + expression + ')'
             )();
+
             if (!Number.isFinite(result)) throw Error();
+
             expression = String(result);
           } catch {
             expression = "";
             display.value = "Error";
             return;
           }
-        } else {
+        }
+
+        else {
           expression += ({
             "÷": "/",
             "×": "*"
@@ -489,75 +605,250 @@ function renderApp(app, root) {
   }
 
   else if (app === "browser") {
+    renderWebApp(root, "browser");
+  }
+
+  else if (app === "youtube") {
     root.innerHTML = `
-      <h3>Web Browser</h3>
-      <form id="browserForm">
-        <input id="browserUrl"
-          placeholder="Enter a website, e.g. example.com">
-        <button type="submit">Open</button>
+      <h3>▶️ YouTube</h3>
+
+      <p>Search for a video or paste a YouTube video link.</p>
+
+      <form id="youtubeForm">
+        <input id="youtubeUrl"
+          placeholder="Paste YouTube video URL">
+
+        <button class="app-button" type="submit">
+          Play in this window
+        </button>
       </form>
-      <p>Some websites block embedded browsing.
-      If a site does not open, use the Open externally button.</p>
-      <button id="external">Open in browser</button>
+
+      <div id="youtubePlayer"></div>
+
+      <button class="secondary-button" id="youtubeExternal">
+        Open YouTube externally
+      </button>
+
+      <p class="window-status">
+        Some YouTube pages cannot be embedded.
+        If a video is blocked, use the external button.
+      </p>
     `;
 
-    const input = root.querySelector("#browserUrl");
+    const input = root.querySelector("#youtubeUrl");
+    const player = root.querySelector("#youtubePlayer");
 
-    function getUrl() {
-      let value = input.value.trim();
-      if (!value) return null;
-
-      if (!/^https?:\/\//i.test(value)) {
-        value = "https://" + value;
-      }
-
-      try {
-        const url = new URL(value);
-        if (!["http:", "https:"].includes(url.protocol)) return null;
-        return url.href;
-      } catch {
-        return null;
-      }
-    }
-
-    root.querySelector("#browserForm").onsubmit = e => {
+    root.querySelector("#youtubeForm").onsubmit = e => {
       e.preventDefault();
-      const url = getUrl();
-      if (url) window.open(url, "_blank", "noopener");
+
+      const videoId = getYouTubeVideoId(input.value);
+
+      if (!videoId) {
+        player.innerHTML =
+          '<p>Enter a valid YouTube video URL.</p>';
+        return;
+      }
+
+      player.innerHTML = `
+        <iframe
+          title="YouTube video player"
+          src="https://www.youtube-nocookie.com/embed/${videoId}"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+      `;
     };
 
-    root.querySelector("#external").onclick = () => {
-      const url = getUrl();
-      if (url) window.open(url, "_blank", "noopener");
+    root.querySelector("#youtubeExternal").onclick = () => {
+      window.open(
+        "https://www.youtube.com/",
+        "_blank",
+        "noopener"
+      );
     };
   }
 
-  else if (["youtube", "facebook", "instagram"].includes(app)) {
-    const urls = {
-      youtube: "https://www.youtube.com/",
-      facebook: "https://www.facebook.com/",
-      instagram: "https://www.instagram.com/"
-    };
+  else if (app === "facebook") {
+    renderWebApp(root, "facebook");
+  }
 
-    root.innerHTML = `
-      <h3>${appInfo[app].title}</h3>
-      <p>This opens the official website in your browser.
-      It does not embed the installed Android app.</p>
-      <button id="openSite">Open ${appInfo[app].title}</button>
-    `;
-
-    root.querySelector("#openSite").onclick = () => {
-      window.open(urls[app], "_blank", "noopener");
-    };
+  else if (app === "instagram") {
+    renderWebApp(root, "instagram");
   }
 
   else if (app === "files") {
     root.innerHTML = `
-      <h3>My Files</h3>
-      <p>This is a prototype file window.</p>
-      <p>Real Android file access will be added later
-      using Android's file picker and permissions.</p>
+      <h3>📁 My Files</h3>
+
+      <p>
+        Select a file from your device to view its name.
+      </p>
+
+      <input type="file" id="filePicker">
+
+      <p id="fileInfo" class="window-status">
+        No file selected.
+      </p>
+
+      <p>
+        Browser security does not allow unrestricted
+        access to your Android file system.
+      </p>
     `;
+
+    root.querySelector("#filePicker").onchange = e => {
+      const file = e.target.files[0];
+
+      root.querySelector("#fileInfo").textContent =
+        file
+          ? "Selected: " + file.name +
+            " (" + Math.round(file.size / 1024) + " KB)"
+          : "No file selected.";
+    };
+  }
+}
+
+function getYouTubeVideoId(value) {
+  try {
+    const url = new URL(value.trim());
+
+    if (url.hostname === "youtu.be") {
+      return url.pathname.slice(1).split("/")[0] || null;
+    }
+
+    if (
+      url.hostname === "youtube.com" ||
+      url.hostname.endsWith(".youtube.com") ||
+      url.hostname === "www.youtube-nocookie.com"
+    ) {
+      if (url.pathname === "/watch") {
+        return url.searchParams.get("v");
+      }
+
+      const match = url.pathname.match(
+        /^\/(?:embed|shorts)\/([a-zA-Z0-9_-]+)/
+      );
+
+      return match ? match[1] : null;
+    }
+  } catch (e) {}
+
+  return null;
+}
+
+function renderWebApp(root, app) {
+  const settings = {
+    browser: {
+      title: "Web Browser",
+      placeholder: "example.com",
+      startUrl: ""
+    },
+
+    facebook: {
+      title: "Facebook",
+      placeholder: "https://www.facebook.com/",
+      startUrl: "https://www.facebook.com/"
+    },
+
+    instagram: {
+      title: "Instagram",
+      placeholder: "https://www.instagram.com/",
+      startUrl: "https://www.instagram.com/"
+    }
+  };
+
+  const info = settings[app];
+
+  root.innerHTML = `
+    <h3>${info.title}</h3>
+
+    <form class="webForm">
+      <input class="webUrl"
+        placeholder="${info.placeholder}"
+        value="${info.startUrl}">
+
+      <button class="app-button" type="submit">
+        Open in window
+      </button>
+    </form>
+
+    <div class="webFrame" style="height:65%; min-height:180px">
+      <p class="window-status">
+        Enter a website address and press Open in window.
+      </p>
+    </div>
+
+    <button class="secondary-button externalButton">
+      Open externally
+    </button>
+
+    <p class="window-status">
+      Some websites block iframe embedding. If the page
+      does not appear, use Open externally.
+    </p>
+  `;
+
+  const input = root.querySelector(".webUrl");
+  const frameArea = root.querySelector(".webFrame");
+
+  function getUrl() {
+    let value = input.value.trim();
+
+    if (!value) return null;
+
+    if (!/^https?:\/\//i.test(value)) {
+      value = "https://" + value;
+    }
+
+    try {
+      const url = new URL(value);
+
+      if (!["http:", "https:"].includes(url.protocol)) {
+        return null;
+      }
+
+      return url.href;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function loadInsideWindow() {
+    const url = getUrl();
+
+    if (!url) {
+      frameArea.innerHTML =
+        "<p>Enter a valid website address.</p>";
+      return;
+    }
+
+    frameArea.innerHTML = "";
+
+    const frame = document.createElement("iframe");
+
+    frame.title = info.title;
+    frame.src = url;
+    frame.loading = "lazy";
+    frame.referrerPolicy = "strict-origin-when-cross-origin";
+
+    frameArea.appendChild(frame);
+  }
+
+  root.querySelector(".webForm").onsubmit = e => {
+    e.preventDefault();
+    loadInsideWindow();
+  };
+
+  root.querySelector(".externalButton").onclick = () => {
+    const url = getUrl();
+
+    if (url) {
+      window.open(url, "_blank", "noopener");
+    }
+  };
+
+  if (info.startUrl) {
+    loadInsideWindow();
   }
 }
 
@@ -572,5 +863,6 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 1000);
 </script>
+
 </body>
-  </html>
+    </html>
